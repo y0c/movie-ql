@@ -1,29 +1,44 @@
-import movies from "./Film.json";
+import films from "./Film.json";
 
-let people = [
-  {
-    name: "hosung",
-    age: 26
-  },
-  {
-    name: "test",
-    age: 10
-  },
-  {
-    name: "ersdfsdf",
-    age: 20
-  },
-  {
-    name: "xcvxcv",
-    age: 21
+// movie json key trasnform lowercase
+const transformObjectKey = obj => {
+  const newObj = {};
+  for (const a in obj) {
+    newObj[a.toLowerCase()] = obj[a];
   }
-];
+  return newObj;
+};
 
-people = people.map((v, i) => {
-  v["id"] = i;
-  return v;
-});
+const mapGenerateId = (obj, i) => {
+  obj.id = i;
+  return obj;
+};
 
-const getById = id => people.find(v => v.id === id);
+let movies = films.map(transformObjectKey).map(mapGenerateId);
 
-export { people, getById };
+console.log(movies);
+
+const getById = id => movies.find(v => v.id === id);
+
+const removeMovie = id => {
+  const filteredMovies = movies.filter(m => m.id !== id);
+  if (movies.length > filteredMovies.length) {
+    movies = filteredMovies;
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const addMovie = (title, year, runtime) => {
+  const newMovie = {
+    id: movies.length + 1,
+    title,
+    year,
+    runtime
+  };
+  movies.push(newMovie);
+  return newMovie;
+};
+
+export { movies, getById, addMovie, removeMovie };
