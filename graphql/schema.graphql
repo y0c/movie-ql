@@ -1,15 +1,14 @@
 type Movie {
   id: Int!
   title: String!
-  year: String!
-  runtime: String!
-}
-type Query {
-  movies: [Movie]!
-  movie(id: Int!): Movie
+  rating: Float!
+  description_full: String!
+  language: String!
+  medium_cover_image: String!
 }
 
-type Mutation {
-  addMovie(title: String!, year: String!, runtime: String!): Movie!
-  removeMovie(id: Int!): Boolean!
+type Query {
+  movies(limit: Int, rating: Float): [Movie]!
+  movie(movieId: Int): Movie!
+  suggestion(movieId: Int): [Movie]!
 }

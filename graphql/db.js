@@ -1,44 +1,40 @@
-import films from "./Film.json";
+import axios from "axios";
 
-// movie json key trasnform lowercase
-const transformObjectKey = obj => {
-  const newObj = {};
-  for (const a in obj) {
-    newObj[a.toLowerCase()] = obj[a];
-  }
-  return newObj;
+const getMovies = (limit, rating) => {
+  const API_URL = "https://yts.am/api/v2/list_movies.json";
+  return axios
+    .get(API_URL, {
+      params: {
+        limit,
+        minimum_rating: rating
+      }
+    })
+    .then(res => res.data)
+    .then(result => result.data.movies);
 };
 
-const mapGenerateId = (obj, i) => {
-  obj.id = i;
-  return obj;
+const getMovieById = movieId => {
+  const API_URL = "https://yts.am/api/v2/movie_details.json";
+  return axios
+    .get(API_URL, {
+      params: {
+        movie_id: movieId
+      }
+    })
+    .then(res => res.data)
+    .then(result => result.data.movie);
 };
 
-let movies = films.map(transformObjectKey).map(mapGenerateId);
-
-console.log(movies);
-
-const getById = id => movies.find(v => v.id === id);
-
-const removeMovie = id => {
-  const filteredMovies = movies.filter(m => m.id !== id);
-  if (movies.length > filteredMovies.length) {
-    movies = filteredMovies;
-    return true;
-  } else {
-    return false;
-  }
+const getSuggestion = movieId => {
+  const API_URL = "https://yts.am/api/v2/movie_suggestions.json";
+  return axios
+    .get(API_URL, {
+      params: {
+        movie_id: movieId
+      }
+    })
+    .then(res => res.data)
+    .then(result => result.data.movies);
 };
 
-const addMovie = (title, year, runtime) => {
-  const newMovie = {
-    id: movies.length + 1,
-    title,
-    year,
-    runtime
-  };
-  movies.push(newMovie);
-  return newMovie;
-};
-
-export { movies, getById, addMovie, removeMovie };
+export { getMovies, getMovieById, getSuggestion };
